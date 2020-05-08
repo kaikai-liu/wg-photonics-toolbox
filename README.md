@@ -8,19 +8,41 @@ Some functions are added to the original `modesolver` module to mesh the commonl
 
 #### input
 
-`% geometry
-width = 2.5;        % waveguide width
-h_co = 0.73;        % Core thickness
-h_cl = 1.0;         % Cladding thichness
-side = 1.0;         % Space on side
-dx = 20e-3;         % grid size (horizontal)
+`% geometry`
+
+`
+width = 2.5;        % waveguide width`
+
+`
+h_co = 0.73;        % Core thickness`
+
+`
+h_cl = 1.0;         % Cladding thichness`
+
+`
+side = 1.0;         % Space on side`
+
+`
+dx = 20e-3;         % grid size (horizontal)`
+
+`
 dy = 10e-3;         % grid size (vertical)`
 
-`% wavelength
-n_cl = 1.4431;      % Cladding index
-n_co = 1.9963;      % Core index
-lambda = 1.55;      % vacuum wavelength
-nmodes = 1;         % number of mode to compute
+`% wavelength`
+
+`
+n_cl = 1.4431;      % Cladding index`
+
+`
+n_co = 1.9963;      % Core index`
+
+`
+lambda = 1.55;      % vacuum wavelength`
+
+`
+nmodes = 1;         % number of mode to compute`
+
+`
 L = 2*pi*11.8e3;    % waveguide length (um)`
 
 #### output
