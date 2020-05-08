@@ -1,0 +1,4 @@
+modesolver_neff_SiN_airclad_1160by510.mat - fwm paper
+modesolver_neff_SiN_SiO2clad_1160by500.mat - fwm paper, SiO2 clad make no ab-GVD
+modesolver_neff_SiN_SiO2clad_2000by730.mat - kippenberg paper dispersion engineering
+modesolver_neff_SiN_SiO2clad_1600by800.mat - kippenberg paper comb

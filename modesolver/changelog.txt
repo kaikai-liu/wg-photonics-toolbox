@@ -1,0 +1,29 @@
+22 April 2011
+
+Corrected bug in stretchmesh routine, which caused the complex
+coordinate stretching to be negative in the south and west boundaries, but
+positive in the north and east boundaries.  Also corrected a bug in
+wgmodes and svmodes in which dy was incorrected conjugated.
+
+(Thanks to Jiri Petracek for discovering this bug.)
+
+28 March 2011
+
+Modified the contourmode and imagemode plotting routines to make them more
+user-friendly.
+
+10 January 2008
+
+Corrected algebraic error in the expressions for Axy(E),
+Axy(W), Ayx(N) and Ayx(S). The earlier version was only correct
+in the special case when e=w and n=s. (I.e., when the mesh is
+uniform in the vicinity of the dielectric edges.) Many thanks
+to yuchunlu_china@hotmail.com, who pointed out this bug. The
+corrected expressions now agree with the isotropic equations of
+Lusse et al, in limit that the materials are isotropic.
+
+8 July 2008
+
+Corrected small error in external plotting functions:  replaced
+"transp" with "transpose", which works for all versions of
+MATLAB.
