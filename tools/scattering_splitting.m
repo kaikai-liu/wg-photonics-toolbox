@@ -1,5 +1,5 @@
-function [g,gamma_s,alpha_s,E_con] = scattering_coupling(modefield,roughness)
-% FUNC_EVAL_MODE_COUPLING calculates the mode coupling rate between forward
+function [g,alpha_g,gamma_s,alpha_s,E_con] = scattering_splitting(modefield,roughness)
+% scattering_splitting.m calculates the mode coupling rate between forward
 % propagating mode and backward propagating mode due to roughness. It also
 % calculates the scattering loss due to roughness
 %
@@ -49,8 +49,10 @@ L = modefield.L;
 c = 299792458;
 f = c/lambda*1e6;
 k0 = 2*pi/lambda;
+beta = neff*k0;
 dn2 = n_co^2 - n_cl^2;              % eps difference between clad and core
 func_corr = @func_corr_exp;
+% func_corr = roughness.func_corr;
 
 % compute for each surface
 for ii = 1:length(roughness.surfaces)
@@ -94,8 +96,14 @@ for ii = 1:length(roughness.surfaces)
     
     % coupling rate integration
     [~,R2beta_ii] = func_corr(0,2*neff*k0,Lcz); % R_hat at 2*beta
+%     E2_edge_int = sqrt(ds*(real(E2_edge*E2_edge').*weight)*ds');
     E2_edge_int = ds*(real(E2_edge*E2_edge').*weight)*ds';
     g(ii) = f*dn2*sigma_ii*sqrt(R2beta_ii/L)*E2_edge_int/Um_2D;
+    alpha_g(ii) = g(ii)*2*pi*neff/c*4.34;
+%     E2_edge_int = sqrt(ds*(real(E2_edge*E2_edge').*weight)*ds');
+%     alpha_g(ii) = (beta*1e6)*beta*(dn2*sqrt(R2beta_ii)*sigma_ii*E2_edge_int/Um_2D)^2;
+%     g(ii) = alpha_g(ii)*c/neff/(2*pi);
+%     alpha_g(ii) = alpha_g(ii)*4.34;
     
     % scattering loss calculation
     N1 = 50;

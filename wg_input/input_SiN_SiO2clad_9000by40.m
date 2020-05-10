@@ -17,5 +17,8 @@ L = 2*pi*11.8e3;    % waveguide length (um)
 
 % roughness
 roughness.surfaces = {1,3};
-roughness.Lc = {[10]*1e-3,50e-3};
+roughness.Lc = {[10 10]*1e-3,50e-3};
 roughness.sigma = {0.45*1e-3,2.5*1e-3};
+% roughness.surfaces = {1};
+% roughness.Lc = {[10]*1e-3};
+% roughness.sigma = {0.45*1e-3};

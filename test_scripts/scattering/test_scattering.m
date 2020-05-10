@@ -3,11 +3,13 @@ clear;
 close all;
 
 %% input
+input_SiO2_SiO2clad_rb
 % input_Si_SiO2clad_1;
 % input_Si_SiO2clad_2;
+% input_Si_SiO2clad_3;
 % input_SiN_SiO2clad;
 % input_SiN_SiO2clad_9000by40
-input_SiN_SiO2clad_2500by730;
+% input_SiN_SiO2clad_2500by730;
 % input_SiN_SiO2clad_1500by800;
 
 %% mode field
@@ -19,13 +21,15 @@ input_SiN_SiO2clad_2500by730;
 n_north = round(ny*h_cl/(2*h_cl+h_co)); 
 n_east = round(nx*side/(width+2*side));
 n_st = [n_north n_north n_east n_east];
-[x,y,xc,yc,dx,dy] = stretchmesh(x,y,n_st,[5,5,5,5]);
+str_factor = 4;
+[x,y,xc,yc,dx,dy] = stretchmesh(x,y,n_st,ones(1,4)*str_factor);
 % [X,Y] = meshgrid(x,y); figure; scatter(X(:),Y(:),'.'); line(edges{:},'Color','red');
 
 % First consider the fundamental TE/TM mode
-[Hx,Hy,neff] = wgmodes(lambda,n_co,nmodes,dx,dy,eps,'0000');
+boundary = '0000';
+[Hx,Hy,neff] = wgmodes(lambda,n_co,nmodes,dx,dy,eps,boundary);
 Hx = Hx(:,:,nmodes); Hy = Hy(:,:,nmodes); neff = neff(nmodes);
-[~,Ex,Ey,Ez] = postprocess(lambda,neff,Hx,Hy,dx,dy,eps,'0000');
+[~,Ex,Ey,Ez] = postprocess(lambda,neff,Hx,Hy,dx,dy,eps,boundary);
 
 %% plot
 visualizemode(Ex,Ey,x,y,edges,neff)
@@ -48,7 +52,7 @@ modefield.neff = neff;
 modefield.lambda = lambda;
 modefield.L = L;
 
-[g,gamma_s,alpha_s,E_con] = scattering_coupling(modefield,roughness);
+[g,alpha_g,gamma_s,alpha_s,E_con] = scattering_splitting(modefield,roughness);
 
 %% report
 for ii = 1:length(roughness.Lc)
@@ -56,5 +60,7 @@ for ii = 1:length(roughness.Lc)
     fprintf('Surface %1d %1dD:                      \n',roughness.surfaces{ii},length(roughness.Lc{ii}));
     fprintf('Mode coupling rate             %.3f MHz\n',g(ii)*1e-6);
     fprintf('Scattering loss rate           %.3f MHz\n',gamma_s(ii)*1e-6);
+    fprintf('Backscattering loss            %.3f dB/m\n',alpha_g(ii));
     fprintf('Propagation loss               %.3f dB/m\n',alpha_s(ii));
+    fprintf('B/S ratio                      %.3f\n',alpha_g(ii)/alpha_s(ii));
 end
