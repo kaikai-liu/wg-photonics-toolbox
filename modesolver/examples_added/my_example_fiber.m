@@ -17,7 +17,7 @@ dx = 10e-3;         % grid size (horizontal)
 dy = 10e-3;         % grid size (vertical)
 
 lambda = 1.55;      % vacuum wavelength
-nmodes = 1;         % number of modes to compute
+nmodes = 2;         % number of modes to compute
 
 % Boundary conditions for antisymmetric mode
 boundary = '0000';
@@ -37,17 +37,6 @@ fprintf(1,'neff = %.6f\n',neff);
 
 %%
 for ii = 1:nmodes
-    [Hz,Ex,Ey,Ez] = postprocess (lambda,neff(ii),Hx(:,:,ii),Hy(:,:,ii),dx,dy,eps,'0000');
-    figure;
-    colormap(jet(256));
-    
-    subplot(121);
-    imagemode(x,y,Ex);
-    title('Ex (TE/TM mode)'); xlabel('x'); ylabel('y');
-    for v = edges, line(v{:}); end
-    
-    subplot(122);
-    imagemode(x,y,Ey);
-    title('Ey (TE/TM mode)'); xlabel('x'); ylabel('y');
-    for v = edges, line(v{:}); end
+    [Hz,Ex,Ey,Ez] = postprocess(lambda,neff(ii),Hx(:,:,ii),Hy(:,:,ii),dx,dy,eps,'0000');
+    visualizemode(Ex,Ey,x,y,edges,neff(ii))
 end

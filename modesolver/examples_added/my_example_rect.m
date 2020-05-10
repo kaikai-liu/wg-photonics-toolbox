@@ -5,35 +5,29 @@
 clear;
 close all;
 
-% Refractive indices:
-n_cl = 1.44;          % Lower cladding
-n_co = 2.0;           % Core
+% geometry
+width = 2.5;        % waveguide width
+h_co = 0.73;        % Core thickness
+h_cl = 1.0;         % Cladding thichness
+side = 1.0;         % Space on side
+dx = 20e-3;         % grid size (horizontal)
+dy = 10e-3;         % grid size (vertical)
 
-% Layer heights:
-h1 = 0.5;           % Lower cladding
-h2 = 0.04;           % Core thickness
-h3 = 0.5;           % Upper cladding
-
-% Horizontal dimensions
-rw = 9/2;           % Ridge half-width
-side = 0.5;         % Space on side
-
-% Grid size:
-dx = 10e-3;         % grid size (horizontal)
-dy = 5e-3;          % grid size (vertical)
-
+% wavelength
+n_cl = 1.4431;      % Cladding index
+n_co = 1.9963;      % Core index
 lambda = 1.55;      % vacuum wavelength
-nmodes = 2;         % number of modes to compute
+nmodes = 3;         % number of mode to compute
 
 % primitive mesh
 [x,y,xc,yc,nx,ny,eps,edges,iedges] = waveguidemesh_rect(...
-    [n_cl,n_co,n_cl],[h1,h2,h3],rw,side,dx,dy);
+    [n_cl,n_co,n_cl],[h_cl,h_co,h_cl],width/2,side,dx,dy);
 
 % undistorted stretch mesh
-n_north = round(ny*h1/(h1+h2+h3)); 
-n_east = round(nx*side/rw/2);
+n_north = round(ny*h_cl/(2*h_cl+h_co)); 
+n_east = round(nx*side/(width+2*side));
 n_st = [n_north n_north n_east n_east];
-[x,y,xc,yc,dx,dy] = stretchmesh(x,y,n_st,[5,5,5,5]);
+[x,y,xc,yc,dx,dy] = stretchmesh(x,y,n_st,[3,3,3,3]);
 [X,Y] = meshgrid(x,y); figure; scatter(X(:),Y(:),'.'); line(edges{:},'Color','red');
 
 % First consider the fundamental TE/TM mode
@@ -44,20 +38,9 @@ fprintf(1,'neff = %.6f\n',neff);
 %%
 for ii = 1:nmodes
     [Hz,Ex,Ey,Ez] = postprocess(lambda,neff(ii),Hx(:,:,ii),Hy(:,:,ii),dx,dy,eps,'0000');
-    figure;
-    colormap(jet(256));
-    
-    subplot(121);
-    imagemode(x,y,Ex);
-    title(['Ex (for TE mode) neff=' num2str(neff(ii),'%.5f')]); xlabel('x(\mum)'); ylabel('y(\mum)');
-    line(edges{:});
-    
-    subplot(122);
-    imagemode(x,y,Ey);
-    title(['Ex (for TE mode) neff=' num2str(neff(ii),'%.5f')]); xlabel('x(\mum)'); ylabel('y(\mum)');
-    line(edges{:});
+    visualizemode(Ex,Ey,x,y,edges,neff(ii))
 end
 
 %%
-subplot(121);
-for v = iedges, line(x(v{1})',y(v{2}));  end
+% subplot(121);
+% for v = iedges, line(x(v{1})',y(v{2}));  end

@@ -4,34 +4,31 @@
 clear;
 close all;
 
-% Refractive indices
-n_co = 2.0;               % core index
-n_cl = 1.44;              % clad index
+% geometry
+width = 4;      	% D-shape width
+% r_D = 8;       	% D circle radius
+h_co = 0.3;     	% Core thickness
+r_D = (h_co^2+(width/2)^2)/(2*h_co); % D circle radius
+h_cl = 0.4;         % Lower cladding
+side = 0.5;         % Space on side
+dx = 10e-3;         % grid size (horizontal)
+dy = 4e-3;          % grid size (vertical)
 
-% Layer heights
-h1 = 0.4;                 % Lower cladding
-h2 = 0.2;                 % Core thickness
-h3 = 0.4;                 % Upper cladding
-
-r_D = 8;                  % D circle radius
-side = 0.5;               % Space on side
-
-% Grid size:
-dx = 10e-3;               % grid size (horizontal)
-dy = 5e-3;               % grid size (vertical)
-
-lambda = 1.55;            % vacuum wavelength
-nmodes = 1;               % number of modes to compute
+% wavelength
+n_co = 2.0;         % core index
+n_cl = 1.44;        % clad index
+lambda = 1.55;      % vacuum wavelength
+nmodes = 3;         % number of mode to compute
 
 % Boundary conditions for antisymmetric mode
 boundary = '0000';
 
 [x,y,xc,yc,nx,ny,eps,edges,iedges] = waveguidemesh_D_shape(...
-    [n_co n_cl],[h1 h2 h3],r_D,side,dx,dy);
+    [n_co n_cl],[h_cl h_co h_cl],r_D,side,dx,dy);
 
 % undistorted stretch mesh
-n_north = round(ny*h1/(h1+h2+h3)); 
-n_east = round(nx*side/max(x)/2);
+n_north = round(ny*h_cl/(2*h_cl+h_co)); 
+n_east = round(nx*side/(width+2*side));
 n_st = [n_north n_north n_east n_east];
 [x,y,xc,yc,dx,dy] = stretchmesh(x,y,n_st,[5,5,5,5]);
 [X,Y] = meshgrid(x,y); figure; scatter(X(:),Y(:),'.'); line(edges{:},'Color','red');
@@ -42,19 +39,8 @@ n_st = [n_north n_north n_east n_east];
 fprintf(1,'neff = %.6f\n',neff);
 %%
 for ii = 1:nmodes
-    [Hz,Ex,Ey,Ez] = postprocess(lambda,neff(ii),Hx(:,:,ii),Hy(:,:,ii),dx,dy,eps,boundary);
-    figure;
-    colormap(jet(256));
-    
-    subplot(121);
-    imagemode(x,y,Ex);
-    title('Ex (TE/TM mode)'); xlabel('x'); ylabel('y');
-    line(edges{:});
-    
-    subplot(122);
-    imagemode(x,y,Ey);
-    title('Ey (TE/TM mode)'); xlabel('x'); ylabel('y');
-    line(edges{:});
+    [Hz,Ex,Ey,Ez] = postprocess(lambda,neff(ii),Hx(:,:,ii),Hy(:,:,ii),dx,dy,eps,'0000');
+    visualizemode(Ex,Ey,x,y,edges,neff(ii))
 end
 
 %%
