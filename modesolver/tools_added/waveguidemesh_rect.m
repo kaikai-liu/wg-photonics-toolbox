@@ -39,11 +39,11 @@ edges{2,:} = [h(1) h(1) h(1)+h(2) h(1)+h(2) h(1)];
 [~,indy1] = min(abs(y-h(1)));
 [~,indy2] = min(abs(y-(h(1)+h(2))));
 iedges{1,1} = find(abs(x)<rw)';
-iedges{2,1} = indy2*ones(1,indx2-indx1-1);
+iedges{2,1} = indy2*ones(1,length(iedges{1,1}));
 iedges{1,2} = find(abs(x)<rw)';
-iedges{2,2} = indy1*ones(1,indx2-indx1-1);
-iedges{1,3} = indx2*ones(1,indy2-indy1-1);
+iedges{2,2} = indy1*ones(1,length(iedges{1,2}));
 iedges{2,3} = find(y>h(1)&y<h(1)+h(2));
-iedges{1,4} = indx1*ones(1,indy2-indy1-1);
+iedges{1,3} = indx2*ones(1,length(iedges{2,3}));
 iedges{2,4} = find(y>h(1)&y<h(1)+h(2));
+iedges{1,4} = indx1*ones(1,length(iedges{2,4}));
 end
