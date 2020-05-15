@@ -19,7 +19,7 @@ function [wg_results,modes_results]  = dispersion_calc(f_in,neff_in,L,f1,f2,f_po
 % settings
 c = 299792458;                      % [m/s]
 pi2 = 2*pi;                         % 2 pi
-thz = 1e-12; um = 1e-6;             % unit scale
+thz = 1e-14; um = 1e-6;             % unit scale
 
 % input and output
 w_in = pi2*f_in(:);
@@ -30,14 +30,9 @@ w_out = pi2*f_out;
 % calculate beta1 and beta2 from poly3 fitting of beta(w)
 dw_in = (w_in-w_in(1))*thz;         % dw denote w_in-w0 in [THz]
 dw_out = (w_out-w_in(1))*thz;       % dw denote w_out-w0 in [THz]
-ft = fit(dw_in,beta_in*um,'poly5');
-% p1 = ft.p1; p2 = ft.p2; p3 = ft.p3; p4 = ft.p4;
-% beta1 = (3*p1*dw_out.^2 + 2*p2*dw_out + p3)*thz/um;
-% beta2 = (6*p1*dw_out    + 2*p2)*thz^2/um;
+ft = fit(dw_in,beta_in*um,'poly4');
 [beta1, beta2] = differentiate(ft,dw_out);
 beta1 = beta1*thz/um; beta2 = beta2*thz^2/um;
-% return f_out,neff_out,ng_out,D_out
-% beta_out = (p1*dw_out.^3 + p2*dw_out.^2 + p3*dw_out + p4)/um;
 beta_out = ft(dw_out)/um;
 neff_out = beta_out./(w_out/c);     % neff = beta/k = beta/(w/c);
 ng_out = c*beta1;                   % vg = c/ng = (dbeta/dw)^-1;
@@ -69,8 +64,6 @@ dFSR_m = [dFSR_m(1); dFSR_m(1); dFSR_m];
 
 % FSR and dFSR can also be derectly calculated from ng and D
 dw_m = (w_m - w_in(1))*thz;
-% beta1_m = (3*p1*dw_m.^2 + 2*p2*dw_m + p3)*thz/um;
-% beta2_m = (6*p1*dw_m    + 2*p2)*thz^2/um;
 [beta1_m, beta2_m] = differentiate(ft,dw_m);
 beta1_m = beta1_m*thz/um; beta2_m = beta2_m*thz^2/um;
 
