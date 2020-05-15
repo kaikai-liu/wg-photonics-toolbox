@@ -96,9 +96,9 @@ for ii = 1:length(roughness.surfaces)
     
     % coupling rate integration
     [~,R2beta_ii] = func_corr(0,2*neff*k0,Lcz); % R_hat at 2*beta
-%     E2_edge_int = sqrt(ds*(real(E2_edge*E2_edge').*weight)*ds');
     E2_edge_int = ds*(real(E2_edge*E2_edge').*weight)*ds';
-    g(ii) = f*dn2*sigma_ii*sqrt(R2beta_ii/L)*E2_edge_int/Um_2D;
+%     E2_edge_int = sqrt(ds*(real(E2_edge*E2_edge').*weight)*ds');
+    g(ii) = 2*f*dn2*sigma_ii*sqrt(R2beta_ii/L)*E2_edge_int/Um_2D;
     alpha_g(ii) = g(ii)*2*pi*neff/c*4.34;
 %     E2_edge_int = sqrt(ds*(real(E2_edge*E2_edge').*weight)*ds');
 %     alpha_g(ii) = (beta*1e6)*beta*(dn2*sqrt(R2beta_ii)*sigma_ii*E2_edge_int/Um_2D)^2;
