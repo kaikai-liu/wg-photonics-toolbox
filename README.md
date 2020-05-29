@@ -65,9 +65,17 @@ About the dimension of the roughness, 1D roughness applies well for sidewall: $R
 
 ## Dispersion calculation module
 
+With only input of neff at different frequencies, it computes the group index ng and the dispersion D. Given your resonator roundtrip length L, it computes FSR at different frequencies.
 
+With a SiN waveguide with 2000 nm by 770 nm and SiO2 cladding, the pump laser is at 190 THz and it plots the frequency matching
+and the integrated dispersion Dint. Open `test_dispersion_calc.m` which uses `dispersion_calc.m` for dispersion calculation and then uses `get_Dint.m` to calculated integrated dispersion and uses `freq_mismatch.m` to calculate the frequency mismatch between signal, idler and pump.
+
+<img src='./data/plot_D.png' width="400"> <img src='./data/plot_Dint_dv.png' width="400">
 
 ## How to use
 
 Add the full path into MATLAB search path by running `add_path.m`. Start from `test_scripts`.
 
+## Issues
+
+- **dispersion calculation is inaccurate.**
